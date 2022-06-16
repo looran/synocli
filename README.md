@@ -128,3 +128,22 @@ Found after creating synocli, maybe some of James analysis can help improve it.
 allows you to push custom SSL certificate for your Synology device, and set an htaccess on the web interface
 
 https://github.com/looran/synoadm
+
+* nas-download-manager - An open source browser extension for adding/managing download tasks to your Synology DiskStation.
+
+https://github.com/seansfkelley/nas-download-manager
+
+does not support quickconnect as per https://github.com/seansfkelley/nas-download-manager/issues/5
+
+
+* vuln CVE-2020-27652, CVE-2020-27653 Synology SRM QuickConnect HTTP connection Information Disclosure Vulnerability (OCTOBER 29, 2020)
+
+An exploitable information disclosure vulnerability exists in the QuickConnect HTTP connection functionality of Synology SRM 1.2.3 RT2600ac 8017-5. An attacker can impersonate the remote VPN endpoint in order to downgrade the HTTPS connection to HTTP, allowing an attacker to capture the web interface communication and in turn steal the session cookies. An attacker can perform a man-in-the-middle attack to trigger this vulnerability.
+
+https://talosintelligence.com/vulnerability_reports/TALOS-2020-1061
+
+* THURSDAY, OCTOBER 29, 2020 Vulnerability Spotlight: Multiple vulnerabilities in Synology SRM (Synology Router Manager)
+
+https://blog.talosintelligence.com/2020/10/vulnerability-spotlight-multiple.html
+
+
