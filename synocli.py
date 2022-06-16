@@ -305,13 +305,14 @@ class Syno(object):
                     self.session[worker_id] = s
             if progress:
                 # create progress bars
-                ptotal = tqdm.tqdm(total=0, position=0, unit_scale=True, bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} err={postfix[0]} files={postfix[1]}/{postfix[2]}", postfix=[0, 0, 0])
+                ptotal = tqdm.tqdm(total=0, position=0, unit_scale=True, bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} err={postfix[0]} warn={postfix[1]} files={postfix[2]}/{postfix[3]}", postfix=[0, 0, 0, 0])
                 self.progress_file = list()
                 for worker_id in range(1, download_threads+1):
                     pfile = tqdm.tqdm(total=0, position=worker_id, unit_scale=True, bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt}", desc="")
                     self.progress_file.append(pfile)
             stats = {
                 'err_count': 0,
+                'relogin_count': 0,
                 'files_count': 0,
                 'files_done': 0,
                 'files_skip': 0,
@@ -406,15 +407,19 @@ class Syno(object):
                     update_progress = True
                     path, outfile, size, worker_id, error = dl.result()
                     if error:
-                        print("XXX type(error)=%s" % type(error))
-                        if type(error) == requests.exceptions.HTTPError and error.response.status_code == 502:
-                            warning("HTTP error 502 while downloading, performing log-in again (%s):\n%s" % (error.response.status_code, path, e))
+                        # XXX we are not detecting properly exceptions from downloader
+                        # XXX "short read 38" is detected properly
+                        if ( (type(error) is requests.exceptions.HTTPError and error.response.status_code == 502)
+                                or (error == "short read 38") ):
+                            warning("HTTP error 502 while downloading or short read with size 38, performing log-in again for downloader %d path %s:\n%s" % (worker_id, path, error))
+                            stats['relogin_count'] += 1
                             time.sleep(self.temporisation)
                             s = self.session[worker_id]
                             self._logout(s)
                             self._login(s)
                             downloads.append(downloader.submit(self._dl_thread, path, outfile, size, progress))
                         else:
+                            warning("unknown error reported by downloader %d while downloading %s:\n%s" % (worker_id, path, error))
                             stats['err_count'] += 1
                         if self.err_count_limit > 0 and stats['err_count'] >= self.err_count_limit:
                             self.err("too many errors encountered while downloading (%d), exiting" % stats['err_count'])
@@ -437,7 +442,7 @@ class Syno(object):
                 if progress and update_progress:
                     ptotal.total = stats['size_count']
                     ptotal.n = stats['size_done'] + stats['size_skip']
-                    ptotal.postfix = [stats['err_count'], stats['files_done']+stats['files_skip'], stats['files_count']]
+                    ptotal.postfix = [stats['err_count'], stats['relogin_count'], stats['files_done']+stats['files_skip'], stats['files_count']]
                     ptotal.refresh()
 
                 time.sleep(0.1)
@@ -714,7 +719,7 @@ class Syno(object):
                                 pfile.refresh()
                 if current_size != size:
                     warning("downloader %d: downloaded %d bytes, different than file size %d while downloading file %s" % (worker_id, current_size, size, path))
-                    error = current_size
+                    error = "short read: %d" % current_size
                 if outfile != '-':
                     f.close()
                     debug("downloader %d: created file %s" % (worker_id, outfile))
