@@ -409,9 +409,9 @@ class Syno(object):
                     path, outfile, size, worker_id, error = dl.result()
                     if error:
                         # XXX we are not detecting properly exceptions from downloader
-                        # XXX "short read 38" is detected properly
+                        # XXX "short read: 38" is detected properly
                         if ( (type(error) is requests.exceptions.HTTPError and error.response.status_code == 502)
-                                or (error == "short read 38") ):
+                                or (error == "short read: 38") ):
                             warning("HTTP error 502 while downloading or short read with size 38, performing log-in again for downloader %d path %s:\n%s" % (worker_id, path, error))
                             stats['relogin_count'] += 1
                             time.sleep(self.temporisation)
