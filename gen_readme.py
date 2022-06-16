@@ -12,14 +12,11 @@ requirements = (Path(__file__).resolve().parent / "requirements.txt").read_text(
 p = subprocess.run(["./synocli.py", "-h"], stdout=subprocess.PIPE)
 usage = p.stdout.decode()
 
-readme = synocli.README_MD.format(
+readme = "## " + synocli.DESCRIPTION.split('\n')[0] + "\n" + synocli.README_MD.format(
     USAGE=usage,
     REQUIREMENTS=requirements,
     INTERACTIVE_MODE_HELP=synocli.INTERACTIVE_MODE_HELP)
 
-text = """## synocli - {description}
-{readme}""".format(description=synocli.DESCRIPTION.split('\n')[0], readme=readme)
-
-file.write_text(text)
+file.write_text(readme)
 
 print("[*] DONE, wrote %s" % file)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-DESCRIPTION = """interact with a Synology device in direct connection or using QuickConnect
+DESCRIPTION = """Synology NAS file management from command-line
 v0.1 - 2022 Laurent Ghigonis <ooookiwi@gmail.com>"""
 
 EXAMPLE_COMMANDLINE = """# list files through QuickConnect
@@ -8,7 +8,7 @@ synocli <quickconnect_id> list
 # list files through QuickConnect, specifying login and password on the command-line
 synocli -l admin -p 'MyPassword' <quickconnect_id> list
 # list files through direct connection
-synocli https://192.168.1.19 list
+synocli https://192.168.1.19:5001 list
 # get file through QuickConnect
 synocli <quickconnect_id> get /share1/document.pdf
 # get all files recursively in a directory through QuickConnect
@@ -40,20 +40,14 @@ change debug level
 running ipython..."""
 
 README_MD = """
-synocli is a command-line tool and Python API than interacts with a DSM7 based Synology device using the Web API.
+synocli is a command-line tool and Python API than interacts with a DSM7 based Synology device using the Web API:
+* **download files with multiple threads** and automatic resume
+* list files
+* provide interactive python shell to query the APIs
+* connection in direct using https://ip|fqdn:port of your device
+* connection through **QuickConnect** using your QuickConnect ID
 
 ![synocli demo: downloading files](doc/synocli_demo.gif)
-
-synocli can:
-* list files on the FileStation
-* download files with multiple threads and supports resuming a recursive directory download using size and modification time checks
-* provide interactive python shell to query the APIs
-
-Log-in is done using login and password of the Web interface.
-
-Connectivity to the Synology device can use the following methods:
-* Direct connection using https://ip|fqdn:port of your device
-* QuickConnect using your QuickConnect ID
 
 ![Synology DSM7 Architecture and infrastructure](doc/synology_dsm7_architecture_and_infrastructure.png)
 
