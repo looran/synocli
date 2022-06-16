@@ -11,8 +11,6 @@ synocli is a command-line tool and Python API than interacts with a DSM7 based S
 
 ![Synology DSM7 Architecture and infrastructure](doc/synology_dsm7_architecture_and_infrastructure.png)
 
-It allows to fetch files efficiently from a Synology NAS whithout shell access on the device.
-
 ### synocli usage
 
 ```
@@ -106,12 +104,24 @@ pip install -r requirements.txt
 
 ### Similar projects and ressources
 
-* synology-api from Renato (N4S4) allows to query many APIs of a Synology device from python
+* synology-api - A Python wrapper around Synology API
 
-It does not support QuickConnect.
+from Renato (N4S4), allows to query many APIs of a Synology device from python
+
+it does not support QuickConnect
 
 https://github.com/N4S4/synology-api/
 
-* synoadm allows you to push custom SSL certificate for your Synology device, and set an htaccess on the web interface.
+* qcon - Go library implementing the Synology QuickConnect protocol
+
+https://github.com/jamesbo13/qcon
+
+https://github.com/jamesbo13/qcon/blob/master/protocol.md
+
+Found after creating synocli, maybe some of James analysis can help improve it.
+
+* synoadm - customize Synology DSM devices
+
+allows you to push custom SSL certificate for your Synology device, and set an htaccess on the web interface
 
 https://github.com/looran/synoadm
