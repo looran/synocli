@@ -52,6 +52,8 @@ synocli is a command-line tool and Python API than interacts with a DSM7 based S
 
 ![Synology DSM7 Architecture and infrastructure](doc/synology_dsm7_architecture_and_infrastructure.png)
 
+Use case for synocli: you have access to a Synology device as a simple user and no services like webdav / sftp are available
+
 ### synocli usage
 
 ```
