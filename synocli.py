@@ -468,13 +468,7 @@ class Syno(object):
 
     def _login(self, session):
         info("[+] login: getting main portal %s" % self.dsmurl)
-
         self.apis_v = dict()
-        URL_ROOT = "/"
-        API_DESKTOP_SESSION_DATA = "/webapi/entry.cgi?api=SYNO.Core.Desktop.SessionData&version=1&method=getjs&SynoToken=&v={v}"
-        API_DESKTOP_DEFS = "/webapi/entry.cgi?api=SYNO.Core.Desktop.Defs&version=1&method=getjs&v={v}"
-        API_DESKTOP_JSUISTRING = "/webapi/entry.cgi?api=SYNO.Core.Desktop.JSUIString&version=1&method=getjs&lang=enu&v={v}"
-        API_DESKTOP_UISTRING = "/webapi/entry.cgi?api=SYNO.Core.Desktop.UIString&version=1&method=getjs&lang=enu&v={v}"
 
         # getting home page
         session.req.headers.update({
