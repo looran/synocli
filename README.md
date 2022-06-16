@@ -94,7 +94,6 @@ The downloader is multi-threaded and starts downloading files as soon as they ar
 You can specify the number of threads (-t), but the default of 2 should be good for all usages. Increasing the thread number will put higher pressure on disk IOs, potentialy decreasing performance.
 
 When doing a recursive download (-R), synocli skip files that have same size and older or same modification time that the local files.
-```
 
 ### Requirements
 
