@@ -11,9 +11,10 @@ synocli is a command-line tool and Python API than interacts with a DSM7 based S
 
 ![Synology DSM7 Architecture and infrastructure](doc/synology_dsm7_architecture_and_infrastructure.png)
 
+It allows to fetch files efficiently from a Synology NAS whithout shell access on the device.
+
 ### synocli usage
 
-command-line usage:
 ```
 usage: synocli.py [-h] [-k] [-l LOGIN] [-L] [-p PASSWORD] [-v]
                   [-z TEMPORISATION]
@@ -53,7 +54,7 @@ synocli <quickconnect_id> get -R /share1/my_directory
 synocli <quickconnect_id> interact
 ```
 
-#### interactive mode
+### interactive mode
 
 ```
 
