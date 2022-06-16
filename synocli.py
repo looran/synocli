@@ -46,6 +46,7 @@ synocli is a command-line tool and Python API than interacts with a DSM7 based S
 * provide interactive python shell to query the APIs
 * connection in direct using https://ip|fqdn:port of your device
 * connection through **QuickConnect** using your QuickConnect ID
+* does not require any service in addition to web interface access
 
 ![synocli demo: downloading files](doc/synocli_demo.gif)
 
