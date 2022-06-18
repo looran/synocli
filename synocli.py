@@ -232,6 +232,7 @@ class Syno(object):
         else:
             self.qcid = url_or_qcid
             self.dsmurl = self._qc_get_dsmurl(session, self.qcid)
+        self.dsmurl_auth = "%s/webapi/auth.cgi" % self.dsmurl
         self.dsmurl_entry = "%s/webapi/entry.cgi" % self.dsmurl
         self.dsmurl_query = "%s/webapi/query.cgi" % self.dsmurl
         self._login(session)
@@ -545,6 +546,7 @@ class Syno(object):
         if "login_footer_msg" in desktop_session and len(desktop_session["login_footer_msg"]) > 0:
             self.infos["login_footer_msg"].add(desktop_session["login_footer_msg"])
         self.infos["version"].add(desktop_session["fullversion"])
+        # 1654074868 = 6.x (Not sure)
         # 1653051291 = 6.2
         # 1420070513 = 6.2
         # 1653468594 = 7
@@ -574,19 +576,20 @@ class Syno(object):
             'account': self.login,
         })
         debug(auth_type.content)
-        data = auth_type.json()['data']
-        if len(data) == 3 and data[1]['type'] == "authenticator" and data[2]['type'] == 'fido':
-            warning("login probably does not exist, or uses special authenticator / FIDO")
+        if auth_type.json()['success']: #skip authorisation type check for compatibility with older DSM version, without SYNO.API.Auth.Type
+            data = auth_type.json()['data']
+            if len(data) == 3 and data[1]['type'] == "authenticator" and data[2]['type'] == 'fido':
+                warning("login probably does not exist, or uses special authenticator / FIDO")
 
         info("[+] login: sending password")
         if self.temporisation > 0:
             time.sleep(random.random() * self.temporisation)
         tabid = random.randint(1, 65536)
-        auth = session.post(self.dsmurl_entry, data={
+        auth = session.post(self.dsmurl_auth, data={
             'api': "SYNO.API.Auth",
-            'version': 7,
+            'version': 6,
             'method': "login",
-            'session': "webui",
+            'session': "FileStation",
             'tabid': tabid,
             'enable_syno_token': "yes",
             # login works without noise ik_message on DSM 7.0
