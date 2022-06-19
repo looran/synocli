@@ -22,7 +22,7 @@ usage: synocli.py [-h] [-k] [-l LOGIN] [-L] [-p PASSWORD] [-v]
                   url_or_qcid {ls,get,interact} ...
 
 Synology NAS file management from command-line
-v0.1 - 2022 Laurent Ghigonis <ooookiwi@gmail.com>
+v0.1 - 2022, Laurent Ghigonis <ooookiwi@gmail.com>
 
 positional arguments:
   url_or_qcid           DSM url as http[s]://ip|fqdn:port or QuickConnect ID
@@ -58,7 +58,6 @@ synocli <quickconnect_id> interact
 ### interactive mode
 
 ```
-
 Interactive mode
 ^^^^^^^^^^^^^^^^
 show this help
@@ -77,8 +76,6 @@ available objects
    syno.infos
 change debug level
    logging.getLogger().setLevel(logging.DEBUG)
-
-running ipython...
 ```
 
 ### synocli architecture
@@ -104,6 +101,9 @@ Install requirements using pip:
 ```
 pip install -r requirements.txt
 ```
+
+optional:
+* ipython, if you you interactive mode (action 'interact')
 
 ### Similar projects and ressources
 

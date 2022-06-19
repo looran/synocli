@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 DESCRIPTION = """Synology NAS file management from command-line
-v0.1 - 2022 Laurent Ghigonis <ooookiwi@gmail.com>"""
+v0.1 - 2022, Laurent Ghigonis <ooookiwi@gmail.com>"""
 
 EXAMPLE_COMMANDLINE = """# list files through QuickConnect
 synocli <quickconnect_id> list
@@ -17,8 +17,7 @@ synocli <quickconnect_id> get -R /share1/my_directory
 synocli <quickconnect_id> interact
 """
 
-INTERACTIVE_MODE_HELP = """
-Interactive mode
+INTERACTIVE_MODE_HELP = """Interactive mode
 ^^^^^^^^^^^^^^^^
 show this help
    synohelp
@@ -36,8 +35,7 @@ available objects
    syno.infos
 change debug level
    logging.getLogger().setLevel(logging.DEBUG)
-
-running ipython..."""
+"""
 
 README_MD = """
 synocli is a command-line tool and Python API than interacts with a DSM7 based Synology device using the Web API:
@@ -62,8 +60,7 @@ Use case for synocli: you have access to a Synology device as a simple user and 
 ### interactive mode
 
 ```
-{INTERACTIVE_MODE_HELP}
-```
+{INTERACTIVE_MODE_HELP}```
 
 ### synocli architecture
 
@@ -85,6 +82,9 @@ Install requirements using pip:
 ```
 pip install -r requirements.txt
 ```
+
+optional:
+* ipython, if you you interactive mode (action 'interact')
 
 ### Similar projects and ressources
 
@@ -980,7 +980,7 @@ if __name__ == "__main__":
     elif args.action == "get":
         syno.get(args.path, args.out, recursive=args.recursive, progress=not args.no_progress, download_threads=args.threads)
     else:
-        synohelp = INTERACTIVE_MODE_HELP
+        synohelp = INTERACTIVE_MODE_HELP + "\nrunning ipython..."
         info(synohelp)
         from IPython import embed
         embed()
