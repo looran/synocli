@@ -8,11 +8,13 @@ synocli is a command-line tool and Python API than interacts with a DSM7 based S
 * connection through **QuickConnect** using your QuickConnect ID
 * does not require any service in addition to web interface access
 
-![synocli demo: downloading files](doc/synocli_demo.gif)
+![synocli demo: downloading files](doc/synocli_demo.gif)<br/>
+_synocli demo: downloading files_
 
-![Synology DSM7 Architecture and infrastructure](https://docs.google.com/drawings/d/e/2PACX-1vQd_4mqoAAbHgl8BaJM8FkwPZ9omRaxk7lN3ynpjuWvGZVb3FaJxl6km-R5Le4Pi9ejWBQhJqWUIzIs/pub?w=1900&h=1200)
+![Synology DSM7 Architecture and infrastructure](https://docs.google.com/drawings/d/e/2PACX-1vQd_4mqoAAbHgl8BaJM8FkwPZ9omRaxk7lN3ynpjuWvGZVb3FaJxl6km-R5Le4Pi9ejWBQhJqWUIzIs/pub?w=1900&h=1200)<br/>
+_Synology DSM7 Architecture and infrastructure: DSM7 components mainly related to FileStation and QuickConnect infrastructure overview_
 
-Use case for synocli: you have access to a Synology device as a simple user and no services like webdav / sftp are available
+<ins>Use case for synocli</ins>: you have access to a Synology device as a simple user and no services like webdav / sftp are available
 
 ### synocli usage
 
