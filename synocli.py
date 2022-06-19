@@ -45,6 +45,7 @@ synocli is a command-line tool and Python API than interacts with a DSM7 based S
 * connection in direct using https://ip|fqdn:port of your device
 * connection through **QuickConnect** using your QuickConnect ID
 * does not require any service in addition to web interface access
+* Partial support is also implemented for older Synology boxes with DSM6
 
 ![synocli demo: downloading files](doc/synocli_demo.gif)<br/>
 _synocli demo: downloading files_
@@ -234,6 +235,7 @@ class Syno(object):
         else:
             self.qcid = url_or_qcid
             self.dsmurl = self._qc_get_dsmurl(session, self.qcid)
+        self.dsmurl_base_path = "%s/webapi/" % self.dsmurl
         self.dsmurl_entry = "%s/webapi/entry.cgi" % self.dsmurl
         self.dsmurl_query = "%s/webapi/query.cgi" % self.dsmurl
         self._login(session)
@@ -547,6 +549,7 @@ class Syno(object):
         if "login_footer_msg" in desktop_session and len(desktop_session["login_footer_msg"]) > 0:
             self.infos["login_footer_msg"].add(desktop_session["login_footer_msg"])
         self.infos["version"].add(desktop_session["fullversion"])
+        # 1654074868 = 6.x (Not sure, cannot check minor revision)
         # 1653051291 = 6.2
         # 1420070513 = 6.2
         # 1653468594 = 7
@@ -555,7 +558,7 @@ class Syno(object):
         v7 = False
         if "is_secure" in desktop_session:
             v7 = True
-        self.infos["detected_dsmv7"].add(v7)
+        self.infos["detected_dsmv7_from_is_secure"].add(v7)
         self.infos["public_access"].add(desktop_session["public_access"])
         if len(desktop_session["sso_server"]) > 0:
             self.infos["sso_server"].add(desktop_session["sso_server"])
@@ -564,31 +567,42 @@ class Syno(object):
 
         if get_security:
             debug(self.api_security(session))
-        debug(self.api_info(session))
+        debug(self.api_info(session).content)
 
         info("[+] login: sending username")
         if self.temporisation > 0:
             time.sleep(random.random() * self.temporisation)
-        auth_type = session.post(self.dsmurl_entry, data={
-            'api': 'SYNO.API.Auth.Type',
-            'method': 'get',
-            'version': 1,
-            'account': self.login,
-        })
-        debug(auth_type.content)
-        data = auth_type.json()['data']
-        if len(data) == 3 and data[1]['type'] == "authenticator" and data[2]['type'] == 'fido':
-            warning("login probably does not exist, or uses special authenticator / FIDO")
+
+        auth_type_api_info = self.api_info(session, 'SYNO.API.Auth.Type').json()
+        if len(auth_type_api_info['data']) == 0:
+            self.infos["detected_dsmv7_from_api_authtype"].add(False)
+            info("skipping authorization type check due to noexistent API, target NAS DSM version is, probably, older than 7")
+        else:
+            self.infos["detected_dsmv7_from_api_authtype"].add(True)
+            auth_type = session.post(self.dsmurl_entry, data={
+                'api': 'SYNO.API.Auth.Type',
+                'method': 'get',
+                'version': 1,
+                'account': self.login,
+            })
+            debug(auth_type.content)
+            data = auth_type.json()['data']
+            if len(data) == 3 and data[1]['type'] == "authenticator" and data[2]['type'] == 'fido':
+                warning("login probably does not exist, or uses special authenticator / FIDO")
 
         info("[+] login: sending password")
         if self.temporisation > 0:
             time.sleep(random.random() * self.temporisation)
         tabid = random.randint(1, 65536)
-        auth = session.post(self.dsmurl_entry, data={
+
+        auth_api_info_data = self.api_info(session, 'SYNO.API.Auth').json()['data']['SYNO.API.Auth']
+        auth_api_url_path = auth_api_info_data['path']
+        auth_api_version = auth_api_info_data['maxVersion']
+        auth = session.post(self.dsmurl_base_path + auth_api_url_path, data={
             'api': "SYNO.API.Auth",
-            'version': 7,
+            'version': auth_api_version,
             'method': "login",
-            'session': "webui",
+            'session': "FileStation",
             'tabid': tabid,
             'enable_syno_token': "yes",
             # login works without noise ik_message on DSM 7.0
@@ -632,7 +646,7 @@ class Syno(object):
         js_security = session.get("%s/webman/security.cgi" % self.dsmurl)
         return js_security.content
 
-    def api_info(self, session=None):
+    def api_info(self, session=None, api="ALL"):
         if not session:
             session = self.session[0]
         query_info = session.post(self.dsmurl_query, data={
@@ -640,8 +654,9 @@ class Syno(object):
             'api': "SYNO.API.Info",
             'method': 'query',
             'version': 1,
+            'query': api,
         })
-        return query_info.content
+        return query_info
 
     def api_desktop_initdata_user_service(self, session=None):
         if not session:
