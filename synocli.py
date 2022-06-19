@@ -575,6 +575,7 @@ class Syno(object):
 
         auth_type_api_info = self.api_info(session, 'SYNO.API.Auth.Type').json()
         if len(auth_type_api_info['data']) == 0:
+            self.infos["detected_dsmv7_from_api_authtype"].add(False)
             info("skipping authorization type check due to noexistent API, target NAS DSM version is, probably, older than 7")
         else:
             self.infos["detected_dsmv7_from_api_authtype"].add(True)
