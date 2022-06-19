@@ -574,7 +574,7 @@ class Syno(object):
             time.sleep(random.random() * self.temporisation)
 
         auth_type_api_info = self.api_info(session, 'SYNO.API.Auth.Type').json()
-        if len(auth_type_api_info.json()['data']) == 0:
+        if len(auth_type_api_info['data']) == 0:
             warning("skipping authorization type check due to noexistent API, target NAS DSM version is, probably, older than 7")
         else:
             auth_type = session.post(self.dsmurl_entry, data={
