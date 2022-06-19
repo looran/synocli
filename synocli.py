@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 DESCRIPTION = """Synology NAS file management from command-line
-v0.1 - 2022 Laurent Ghigonis <ooookiwi@gmail.com>"""
+v0.1 - 2022, Laurent Ghigonis <ooookiwi@gmail.com>"""
 
 EXAMPLE_COMMANDLINE = """# list files through QuickConnect
 synocli <quickconnect_id> list
@@ -17,8 +17,7 @@ synocli <quickconnect_id> get -R /share1/my_directory
 synocli <quickconnect_id> interact
 """
 
-INTERACTIVE_MODE_HELP = """
-Interactive mode
+INTERACTIVE_MODE_HELP = """Interactive mode
 ^^^^^^^^^^^^^^^^
 show this help
    synohelp
@@ -36,8 +35,7 @@ available objects
    syno.infos
 change debug level
    logging.getLogger().setLevel(logging.DEBUG)
-
-running ipython..."""
+"""
 
 README_MD = """
 synocli is a command-line tool and Python API than interacts with a DSM7 based Synology device using the Web API:
@@ -48,11 +46,13 @@ synocli is a command-line tool and Python API than interacts with a DSM7 based S
 * connection through **QuickConnect** using your QuickConnect ID
 * does not require any service in addition to web interface access
 
-![synocli demo: downloading files](doc/synocli_demo.gif)
+![synocli demo: downloading files](doc/synocli_demo.gif)<br/>
+_synocli demo: downloading files_
 
-![Synology DSM7 Architecture and infrastructure](https://docs.google.com/drawings/d/e/2PACX-1vQd_4mqoAAbHgl8BaJM8FkwPZ9omRaxk7lN3ynpjuWvGZVb3FaJxl6km-R5Le4Pi9ejWBQhJqWUIzIs/pub?w=1900&h=1200)
+![Synology DSM7 Architecture and infrastructure](https://docs.google.com/drawings/d/e/2PACX-1vQd_4mqoAAbHgl8BaJM8FkwPZ9omRaxk7lN3ynpjuWvGZVb3FaJxl6km-R5Le4Pi9ejWBQhJqWUIzIs/pub?w=1900&h=1200)<br/>
+_Synology DSM7 Architecture and infrastructure: DSM7 components mainly related to FileStation and QuickConnect infrastructure overview_
 
-Use case for synocli: you have access to a Synology device as a simple user and no services like webdav / sftp are available
+<ins>Use case for synocli</ins>: you have access to a Synology device as a simple user and no services like webdav / sftp are available
 
 ### synocli usage
 
@@ -62,8 +62,7 @@ Use case for synocli: you have access to a Synology device as a simple user and 
 ### interactive mode
 
 ```
-{INTERACTIVE_MODE_HELP}
-```
+{INTERACTIVE_MODE_HELP}```
 
 ### synocli architecture
 
@@ -85,6 +84,9 @@ Install requirements using pip:
 ```
 pip install -r requirements.txt
 ```
+
+optional:
+* ipython, if you you interactive mode (action 'interact')
 
 ### Similar projects and ressources
 
@@ -983,7 +985,7 @@ if __name__ == "__main__":
     elif args.action == "get":
         syno.get(args.path, args.out, recursive=args.recursive, progress=not args.no_progress, download_threads=args.threads)
     else:
-        synohelp = INTERACTIVE_MODE_HELP
+        synohelp = INTERACTIVE_MODE_HELP + "\nrunning ipython..."
         info(synohelp)
         from IPython import embed
         embed()
