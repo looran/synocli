@@ -558,7 +558,7 @@ class Syno(object):
         v7 = False
         if "is_secure" in desktop_session:
             v7 = True
-        self.infos["detected_dsmv7"].add(v7)
+        self.infos["detected_dsmv7_from_is_secure"].add(v7)
         self.infos["public_access"].add(desktop_session["public_access"])
         if len(desktop_session["sso_server"]) > 0:
             self.infos["sso_server"].add(desktop_session["sso_server"])
@@ -575,8 +575,9 @@ class Syno(object):
 
         auth_type_api_info = self.api_info(session, 'SYNO.API.Auth.Type').json()
         if len(auth_type_api_info['data']) == 0:
-            warning("skipping authorization type check due to noexistent API, target NAS DSM version is, probably, older than 7")
+            info("skipping authorization type check due to noexistent API, target NAS DSM version is, probably, older than 7")
         else:
+            self.infos["detected_dsmv7_from_api_authtype"].add(True)
             auth_type = session.post(self.dsmurl_entry, data={
                 'api': 'SYNO.API.Auth.Type',
                 'method': 'get',
