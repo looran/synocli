@@ -148,9 +148,9 @@ import binascii
 import argparse
 import threading
 import concurrent.futures
-from pathlib import Path
 from pprint import pformat
 from collections import defaultdict
+from pathlib import Path, PurePosixPath
 from logging import debug, info, warning, error
 
 import tqdm
@@ -306,9 +306,9 @@ class Syno(object):
 
     def get(self, basepath, outpath=None, recursive=False, progress=True, download_threads=DOWNLOAD_THREADS_DEFAULT):
         session = self.session[0]
-        # ensure path is a Path
+        # ensure path is a native PosixPath or could be converted to it before sending to SYNOLOGY (for windows users)
         if type(basepath) is str:
-            basepath = Path(basepath)
+            basepath = PurePosixPath(basepath)
         # ensure outpath is a Path, except if stdout
         if outpath is None:
             outpath = Path('.').absolute()
@@ -381,7 +381,7 @@ class Syno(object):
                             if not outpath.exists():
                                 outpath.mkdir()
                         for d in lsjson["data"]["files"]:
-                            path = Path(d["path"])
+                            path = PurePosixPath(d["path"])
                             if d["isdir"]:
                                 stats['dir_count'] += 1
                                 relativepath = path.relative_to(basepath)
