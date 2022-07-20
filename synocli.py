@@ -224,6 +224,7 @@ class Syno(object):
         self.err_count_limit = err_count_limit
         self.infos = defaultdict(set)
         self.session = dict()
+        self.dsmurl = None
         session = Syno_session(0, self.insecure)
         self.session[0] = session
         if any(pattern in url_or_qcid for pattern in ["http://", "https://"]):
@@ -769,12 +770,13 @@ class Syno(object):
 
     def _logout(self, session):
         debug("logout")
-        auth = session.post(self.dsmurl_entry, data={
-            'api': "SYNO.API.Auth",
-            'version': 7,
-            'method': "logout",
-        })
-        debug(auth.content)
+        if self.dsmurl:
+            auth = session.post(self.dsmurl_entry, data={
+                'api': "SYNO.API.Auth",
+                'version': 7,
+                'method': "logout",
+            })
+            debug(auth.content)
 
     def _qc_get_dsmurl(self, session, qcid):
         info("[+] fetching main qc page")
